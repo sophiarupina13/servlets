@@ -5,11 +5,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.model.Expense;
+import org.example.model.Transaction;
+import org.example.model.Id;
+import org.example.model.Type;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SummaryServlet extends HttpServlet {
 
@@ -22,9 +23,9 @@ public class SummaryServlet extends HttpServlet {
         var rent = Integer.parseInt(config.getInitParameter("rent"));
 
         context.setAttribute("freeMoney", salary - rent);
-        List<Expense> expenses = new ArrayList<>();
-        expenses.add(new Expense("rent", rent));
-        context.setAttribute("expenses", expenses);
+        Map<Id, Transaction> transactions = new LinkedHashMap<>();
+        transactions.put(new Id(), new Transaction(Type.EXPENSE, "rent", rent));
+        context.setAttribute("transactions", transactions);
     }
 
     @Override
@@ -39,7 +40,7 @@ public class SummaryServlet extends HttpServlet {
         }
 
         req.getRequestDispatcher("/details").include(req, resp);
-        resp.getWriter().println("Free money: " + context.getAttribute("freeMoney"));
+        resp.getWriter().println("\nFree money: " + context.getAttribute("freeMoney"));
     }
 
 }

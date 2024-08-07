@@ -20,7 +20,7 @@ public class LoginServlet extends HttpServlet {
 
         if (passwd.equals(password)) {
             HttpSession session = req.getSession();
-            session.setMaxInactiveInterval(10);
+            session.setMaxInactiveInterval(60*2);
             resp.sendRedirect("/summary");
         } else {
             resp.getWriter().println("Wrong password");

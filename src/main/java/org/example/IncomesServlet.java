@@ -1,6 +1,7 @@
 package org.example;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,7 +12,8 @@ import org.example.model.Type;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
-public class ExpensesServlet extends HttpServlet {
+@WebServlet("/incomes/add")
+public class IncomesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,20 +25,20 @@ public class ExpensesServlet extends HttpServlet {
         }
 
         var context = req.getServletContext();
-        context.log("[ExpensesServlet] doGet");
+        context.log("[IncomesServlet] doGet");
 
         var transactions = (LinkedHashMap<Id, Transaction>) context.getAttribute("transactions");
         int freeMoney = (int) context.getAttribute("freeMoney");
 
         for (var k : req.getParameterMap().keySet()) {
             int value = Integer.parseInt(req.getParameter(k));
-            freeMoney -= value;
-            transactions.put(new Id(), (new Transaction(Type.EXPENSE, k, value)));
+            freeMoney += value;
+            transactions.put(new Id(), (new Transaction(Type.INCOME, k, value)));
         }
 
         context.setAttribute("freeMoney", freeMoney);
         context.setAttribute("transactions", transactions);
-        resp.getWriter().println("Expenses were added");
+        resp.getWriter().println("Incomes were added");
 
         try {
             Thread.sleep(3000);
@@ -45,4 +47,5 @@ public class ExpensesServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
+
 }
